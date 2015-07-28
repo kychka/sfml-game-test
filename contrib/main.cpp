@@ -1,4 +1,4 @@
-// Базовый код для рисования прямоугольников
+// Code base to draw rectangle
 
 #include "MatrixDeityRect.h"
 
@@ -6,10 +6,10 @@
 
 int main()
 {
-	system("title DEBUGGING WINDOW"); // Устанавливает заголовок окна отладки
+	system("title DEBUGGING WINDOW"); // Set window title
 	RenderWindow window(sf::VideoMode(1200, 800), "SFML TEST");
-	
-	MatrixDeityRect mdRect(Vector2f(5.0 ,695.0), Vector2f(100.0, 100.0), Color(0, 0, 255)); // Прямоугольник MatrixDeity
+
+	MatrixDeityRect mdRect(Vector2f(5.0 ,695.0), Vector2f(100.0, 100.0), Color(0, 0, 255)); // Rectangle of MatrixDeity
 
 	while (window.isOpen())
 	{
