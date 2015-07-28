@@ -3,8 +3,6 @@
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 using namespace sf;
-//Чтобы использовать класс, нужно создать его объект и передать в конструктор позицию круга в окне и радиус,
-// а дальше вызвать функцию render, передав главное окно
 class CircleBySemitro
 {
 public:
