@@ -9,8 +9,9 @@ int main()
 {
 	RenderWindow window(VideoMode(1200, 800), "TeamWork");
 
-	
-	
+	Rectt rectc4(740, 540, 50, 50, 125, 215, 130);
+	Rectt rectc2(630, 500, 50, 50, 100, 200, 0);
+	Rectt rectc3(530, 330,50, 50, 0, 255 ,100);
 	
 	
 
