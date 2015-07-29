@@ -25,7 +25,9 @@ int main()
 		}
 
 		window.clear();
-		
+		window.draw(2);
+		window.draw(3);
+		window.draw(4);
 		window.display();
 		
 	
