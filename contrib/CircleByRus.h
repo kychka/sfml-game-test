@@ -4,12 +4,12 @@
 
 using namespace sf;
 
-class circle
+class circleByRus
 {
 	public:
 		float x, y, r;
 		Texture texture;
 		CircleShape MyCircle;
-		circle(float X, float Y,  float R);
+		circleByRus(float X, float Y,  float R);
 		void CircleDraw(sf::RenderWindow &w);
 };

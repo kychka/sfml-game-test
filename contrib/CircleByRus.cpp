@@ -1,16 +1,16 @@
-#include "Circle.h"
+#include "CircleByRus.h"
 
-circle::circle(float X, float Y, float R)
+circleByRus::circleByRus(float X, float Y, float R)
 {
 	x = X;
 	y = Y;
 	r = R;
-	
+
 	MyCircle.setPosition(X, Y);
 	MyCircle.setRadius(R);
 	MyCircle.setFillColor(Color(200, 50, 70));
 }
-void circle::CircleDraw(sf::RenderWindow &w)
+void circleByRus::CircleDraw(sf::RenderWindow &w)
 {
 	w.draw(MyCircle);
 }
