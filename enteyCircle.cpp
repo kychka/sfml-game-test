@@ -3,7 +3,6 @@
 Circle::Circle() { 
 		x = 0; 
 		y = 0; 
-		choice = 0;
 		size = 100.f; 
 		color = "white";
 	}
