@@ -1,5 +1,5 @@
 #include "pause.h"
-#include <iostream>
+
 Pause::Pause(RenderWindow &window):
 	_window(window),
 	_resume(L"Продолжить",window.getView().getSize().x/2.5,window.getView().getSize().y/2.5),
