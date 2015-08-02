@@ -1,11 +1,10 @@
 #include "pause.h"
-
 Pause::Pause(RenderWindow &window):
 	_window(window),
 	_resume(L"Продолжить",window.getView().getSize().x/2.5,window.getView().getSize().y/2.5),
 	_quit(L"Выйти",window.getView().getSize().x/2.5,window.getView().getSize().y/2.1)
 {
-	_focus_button = resume; // Сперва выделена кнопка позврата
+	_focus_button = resume; // Сперва выделена кнопка возврата
 	_back.setFillColor(Color(0,0,0,200));
 	_back.setSize(Vector2f(window.getView().getSize().x,window.getView().getSize().y));
 	_menu.setSize( Vector2f(window.getView().getSize().x,window.getView().getSize().y/2.5));
@@ -43,17 +42,17 @@ void Pause::exec(){
 	}
 }
 void Pause::render(){
+	_resume.setFocus(false); // Убираем старые выделения
+	_quit.setFocus(false);
+
+	if(_focus_button == resume) // И делаем новые
+		_resume.setFocus();
+	if(_focus_button == quit)
+		_quit.setFocus(true);
 	_window.draw(_back);
 	_window.draw(_menu);
-	if(_focus_button == resume)
-		_resume.render(_window,true);
-	else
-		_resume.render(_window,false);
-
-	if(_focus_button == quit)
-		_quit.render(_window,true);
-	else
-		_quit.render(_window,false);
+	_resume.render(_window);
+	_quit.render(_window);
 }
 Pause::~Pause()
 {

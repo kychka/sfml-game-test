@@ -12,11 +12,14 @@ class Button
 public:
 	Button(String text,Vector2f position,unsigned int character_size=30);
 	Button(String text,float position_x, float position_y, unsigned int character_size=30);
+	FloatRect getGlobalBounds();
 	~Button();
-	void render(RenderWindow &window,bool has_focus=false);
+	void render(RenderWindow &window);
+	void setFocus(bool focus = true);
 private:
 	Text _text;
 	Font _font;
+	bool _focus; // Выделять ли кнопку?
 };
 
 #endif // BUTTON_H
