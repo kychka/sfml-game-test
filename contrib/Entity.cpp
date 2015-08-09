@@ -8,7 +8,9 @@ Entity::Entity(){
 	_frameTime = NULL;
 }
 
-Entity::Entity(std::string name, int hp, int arm, Animation animation_mass[]){
+Entity::Entity(std::string name, float w, float h, Animation animation_mass[]){
+	_widht = w;
+	_height = h;
 	_Name = name;
 	_MassAnim = animation_mass;
 }
@@ -54,4 +56,24 @@ Vector2f Entity::getPossition()
 
 void Entity::playAnim(int num){
 	_Animation.play(_MassAnim[num]);
+}
+
+void Entity::setWidht(float w){
+	_widht = w;
+}
+
+void Entity::setHeight(float h){
+	_height = h;
+}
+
+float Entity::getWidht(){
+	return _widht;
+}
+
+float Entity::getHeight(){
+	return _height;
+}
+
+FloatRect Entity::getRect(){
+	return FloatRect(X_Y_Poss.x, X_Y_Poss.y, _widht, _height);
 }

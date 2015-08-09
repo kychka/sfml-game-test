@@ -11,7 +11,7 @@ class Entity{
 public:
 	
 	Entity();
-	Entity(std::string name, int hp, int arm, Animation animation_mass[]);
+	Entity(std::string name, float w, float h, Animation animation_mass[]);
 	~Entity();
 	void setPossition(float x, float y);
 	void setAnimationSpeed(float as);
@@ -22,9 +22,16 @@ public:
 	Vector2f getCenter();
 	Vector2f getPossition();
 	void playAnim(int num);
+	void setWidht(float w);
+	void setHeight(float h);
+	float getWidht();
+	float getHeight();
+	FloatRect getRect();
 	
 	virtual void updateAndDraw(Time &time, std::vector<lv::Object> &allObj, RenderWindow &window) = 0; //принимает вектор со всеми обьектами на карте
 private:
+	float _widht;
+	float _height;
 	Vector2f X_Y_Poss;
 	Animation *_MassAnim;               // ”казатель на силку јнимации
 	AnimatedSprite _Animation;        //  ласс анимации
