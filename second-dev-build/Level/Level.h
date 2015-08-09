@@ -1,4 +1,5 @@
-﻿#pragma once
+#ifndef LEVEL_H
+#define LEVEL_H
 #include <vector>
 #include <map>
 #include "SFML\Graphics.hpp"
@@ -363,3 +364,4 @@ namespace lv
 		return sf::Vector2i(width, height);
 	}
 }
+#endif LEVEL_H
