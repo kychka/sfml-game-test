@@ -9,9 +9,8 @@ using namespace sf;
 
 class Entity{
 public:
-	
-	Entity();
-	Entity(std::string name, float w, float h, Animation animation_mass[]);
+	Entity(std::string name, Animation animation_mass[],Vector2f position);
+	Entity(){};
 	~Entity();
 	void setPossition(float x, float y);
 	void setAnimationSpeed(float as);
@@ -29,7 +28,6 @@ public:
 	FloatRect getRect();
 	
 	virtual void updateAndDraw(Time &time, std::vector<lv::Object> &allObj, RenderWindow &window) = 0; //принимает вектор со всеми обьектами на карте
-private:
 	float _widht;
 	float _height;
 	Vector2f X_Y_Poss;
@@ -38,6 +36,5 @@ private:
 	String _Name;
 	float _frameTime;
 	Time time;
-	void swapAnimation();                 //Смена анимации
 };
 #endif

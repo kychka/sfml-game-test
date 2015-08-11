@@ -1,27 +1,28 @@
+
 #include"Entity.h"
 
 using namespace sf;
 
-Entity::Entity(){
-	X_Y_Poss.x = NULL;
-	X_Y_Poss.y = NULL;
-	_frameTime = NULL;
-}
+//Entity::Entity(){
+//
+//	X_Y_Poss.x = NULL;
+//	X_Y_Poss.y = NULL;
+//	_frameTime = NULL;
+//	_Name = "";
+//}
 
-Entity::Entity(std::string name, float w, float h, Animation animation_mass[]){
-	_widht = w;
-	_height = h;
+Entity::Entity(std::string name,  Animation animation_mass[],Vector2f position){
+	X_Y_Poss = position;
+	_widht = _Animation.getGlobalBounds().width;
+	_height = _Animation.getGlobalBounds().height;
 	_Name = name;
 	_MassAnim = animation_mass;
-}
-
-Entity::Entity(){
-
 }
 
 void Entity::setPossition(float x, float y){
 	X_Y_Poss.x = x;
 	X_Y_Poss.y = y;
+	_Animation.setPosition(X_Y_Poss);
 }
 
 void Entity::setAnimationSpeed(float as){
@@ -75,5 +76,5 @@ float Entity::getHeight(){
 }
 
 FloatRect Entity::getRect(){
-	return FloatRect(X_Y_Poss.x, X_Y_Poss.y, _widht, _height);
+	return _Animation.getGlobalBounds();
 }
