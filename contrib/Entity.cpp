@@ -3,6 +3,15 @@
 
 using namespace sf;
 
+<<<<<<< HEAD
+Entity::Entity(){
+
+	X_Y_Poss.x = NULL;
+	X_Y_Poss.y = NULL;
+	_frameTime = NULL;
+	_Name = "";
+}
+=======
 //Entity::Entity(){
 //
 //	X_Y_Poss.x = NULL;
@@ -10,6 +19,7 @@ using namespace sf;
 //	_frameTime = NULL;
 //	_Name = "";
 //}
+>>>>>>> ace4fb9ab2447c020d90cc27dbec174bc52e4359
 
 Entity::Entity(std::string name,  Animation animation_mass[],Vector2f position){
 	X_Y_Poss = position;
