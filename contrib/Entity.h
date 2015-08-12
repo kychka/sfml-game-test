@@ -28,8 +28,6 @@ public:
 	FloatRect getRect();
 	
 	virtual void updateAndDraw(Time &time, std::vector<lv::Object> &allObj, RenderWindow &window) = 0; //принимает вектор со всеми обьектами на карте
-	float _widht;
-	float _height;
 	Vector2f X_Y_Poss;
 	Animation *_MassAnim;               // ”казатель на силку јнимации
 	AnimatedSprite _Animation;        //  ласс анимации
@@ -37,8 +35,6 @@ public:
 	float _frameTime;
 	Time time;
 };
-
-
 
 Entity::Entity(){
 
@@ -94,22 +90,6 @@ Vector2f Entity::getPossition()
 void Entity::playAnim(int num){
 	_Animation.play(_MassAnim[num]);
 }
-
-//void Entity::setWidht(float w){
-//	_widht = w;
-//}
-//
-//void Entity::setHeight(float h){
-//	_height = h;
-//}
-//
-//float Entity::getWidht(){
-//	return _widht;
-//}
-//
-//float Entity::getHeight(){
-//	return _height;
-//}
 
 FloatRect Entity::getRect(){
 	return _Animation.getGlobalBounds();
