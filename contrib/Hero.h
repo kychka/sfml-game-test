@@ -1,8 +1,9 @@
-
+#ifndef HERO_H
+#define HERO_H
 #include "AnimatedSprite.hpp"
 #include "Animation.hpp"
-#include "..\Level\Level.h"
 #include "..\Entity\Entity.h"
+#include <vector>
 
 using namespace sf;// Пространство имен
 
@@ -55,11 +56,15 @@ Hero::Hero() :Entity(){
 }
 
 Hero::Hero(std::string name,  Animation animation_mass[],Vector2f position,int hp, int arm) :Entity(name, animation_mass,position){
-    _Animation.setPosition(position);
 	H_Hp = hp;
 	H_Arm = arm;
-
-
+	H_DX = NULL;
+	H_DXL = NULL;
+	H_Speed = 1.0;
+	K_ON = true;
+	H_onGround = false;
+	H_JumpIndex = 5.0;
+	H_Jump = false;
 }
 
 
@@ -88,7 +93,7 @@ inline void Hero::collision(std::vector<lv::Object> &allObj)
 	for (int i = 0; i < allObj.size(); i++)
 	{   
 	
-		if (_Animation.getGlobalBounds().intersects(allObj[i].rect)){
+		if (getRect().intersects(allObj[i].rect)){
 			if (allObj[i].name == "ground")
 			{
 			 H_onGround = true;
@@ -125,19 +130,19 @@ inline void Hero::swapHeroAnimation()
 
 	if (!_Animation.isPlaying())
 	{
-		_Animation.play(_MassAnim[3]); // Анимация по дефолту (если не выставить то при проверке на колизию будет краш, так как он будет запрашивать данные о кадре а тоесть его позици размер итд.)
+		playAnim(3); // Анимация по дефолту (если не выставить то при проверке на колизию будет краш, так как он будет запрашивать данные о кадре а тоесть его позици размер итд.)
 	}
 
 
 	if (H_DXL == 2 && H_DX == 0 )  // Правая анимация стоя
 	{
-		_Animation.play(_MassAnim[0]); // в зависимости от индеска масива анимаций
+		playAnim(0); // в зависимости от индеска масива анимаций
 		
 		return;
 	}
 	if (H_DXL == 4 && H_DX == 0  ) // Левая анимация стоя
 	{
-		_Animation.play(_MassAnim[1]);
+		playAnim(1);
 		
 		return;
 	}
@@ -149,19 +154,19 @@ inline void Hero::swapHeroAnimation()
 	}
 	if (H_DX == 3) // Анимация вниз или присел
 	{
-		_Animation.play(_MassAnim[2]);
+		playAnim(2);
 	
 		return;
 	}
 	if (H_DX == 2) // Анимация в право 
 	{
-		_Animation.play(_MassAnim[2]);
+		playAnim(2);
 		
 		return;
 	}
 	if (H_DX == 4) // Анимация в лево
 	{
-		_Animation.play(_MassAnim[3]);
+		playAnim(3);
 	
 		return;
 	}
@@ -235,7 +240,7 @@ void Hero::updateAndDraw(Time &time, std::vector<lv::Object> &allObj, RenderWind
 	this->time = time;
 	heroKeyPressed(K_ON);
 	swapHeroAnimation();
-	draw(window);
+	window.draw(_Animation);
 	HeroJump();
 	_Animation.updateAnimation(time);
 	collision(allObj);
@@ -365,3 +370,4 @@ Gravi::Gravi()
 	 window->setView(view);
  }
 
+#endif
