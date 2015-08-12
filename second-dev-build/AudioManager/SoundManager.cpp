@@ -1,8 +1,5 @@
 ﻿#include "SoundManager.hpp"
 
-std::random_device rd;
-std::mt19937 gen(rd());
-
 namespace am
 {
 
@@ -46,10 +43,14 @@ bool SoundManager::playRandSound(std::string const& filename)
 	/*
 		more
 	*/
+
 	short i = 0;
-	std::uniform_int_distribution<int> uid(1, maxNumberOfSounds);
-	i = uid(gen);
-	std::string fullPath = "resources/sounds/" + filename + "/" + std::to_string(i) + ".wav";
+	srand(time(0));
+	i = rand() % maxNumberOfSounds + 1;
+
+	std::ostringstream numb;
+	numb << i;
+	std::string fullPath = "resources/sounds/" + filename + "/" + numb.str() + ".wav";
 	auto s = prepareSound(fullPath);
 	if (s != nullptr)
 	{

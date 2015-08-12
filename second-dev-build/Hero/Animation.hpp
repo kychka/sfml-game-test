@@ -28,11 +28,12 @@
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <string>
-#include "..\\Level\TinyXML\tinystr.h" // я не знаю как иначе, кто знает подскажите 
-#include "..\\Level\TinyXML\tinyxml.h"
 #include <conio.h>
 #include <iostream>
-#include <SFML\Graphics.hpp>
+#include <SFML/Graphics.hpp>
+#include "../Level/TinyXML/tinystr.h"
+#include "../Level/TinyXML/tinyxml.h"
+
 class Animation
 {
 public:
@@ -43,11 +44,9 @@ public:
 	const sf::Texture* getSpriteSheet() const;
 	std::size_t getSize() const;
 	const sf::IntRect& getFrame(std::size_t n) const;
-
 private:
 	std::vector<sf::IntRect> m_frames;
 	const sf::Texture* m_texture;
-	
 };
 
 #endif // ANIMATION_INCLUDE

@@ -5,8 +5,6 @@
 #include "Menu\pause.h"
 #include "Menu\startmenu.h"
 
-
-
 using namespace sf;
 using namespace lv;
 int main()

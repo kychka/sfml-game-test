@@ -35,7 +35,7 @@
 class AnimatedSprite : public sf::Drawable, public sf::Transformable // Унаследован от Drawable (Позволяет нам рисовать его с помощью .draw();
 {
 public:
-	AnimatedSprite::AnimatedSprite();//Конуструктор по умолчанию 
+	AnimatedSprite();//Конуструктор по умолчанию 
 	void setAnimPropers(sf::Time frameTime = sf::seconds(0.2f), bool paused = false, bool looped = true);// Настрйоки по дефолту
 	void updateAnimation(sf::Time deltaTime);// Обновление анимации согласно времени цикла 
 	void setAnimation(const Animation& animation); //Устанвока анимации 
@@ -54,7 +54,6 @@ public:
 	sf::Time getFrameTime() const;
 	void setFrame(std::size_t newFrame, bool resetTime = true);
 	void setFrameIndex(int frame);
-	
 private:
 	const Animation* m_animation;
 	sf::Time m_frameTime;
@@ -64,8 +63,6 @@ private:
 	bool m_isLooped;
 	const sf::Texture* m_texture;
 	sf::Vertex m_vertices[4];
-
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-
 };
 #endif // ANIMATEDSPRITE_INCLUDE
