@@ -22,11 +22,13 @@ public:
 	int getHeroArm();  
 	void updateAndDraw(Time &time, std::vector<lv::Object> &allObj, RenderWindow &window);
 	void swapHeroAnimation();
+	void takeDamage(int damage);
 private:
+	bool invulnerability;
+	float invulnerabilityTimer;
 	bool H_Jump;
 	void HeroJump();                                    // для обсчета прыжка  
 	float H_JumpIndex;                                // для обсчета прыжка
-	bool H_onGround;
 	bool K_ON;                                      // Индикатор разрешить управление или нет( по дифолту тру)
 	int H_Hp;                                      // Жизни
 	int H_Arm;                                    // Броня
@@ -40,6 +42,8 @@ private:
 	
 };
 
+
+
 Hero::Hero() :Entity(){
 	// Конструктор по умолчанию 
 	
@@ -49,9 +53,11 @@ Hero::Hero() :Entity(){
 	H_DXL = NULL;
 	H_Speed = 1.0;
 	K_ON = true;
-	H_onGround = false;
+	_onGround = false;
 	H_JumpIndex = 5.0;
 	H_Jump = false;
+	invulnerability = false;
+	invulnerabilityTimer = 0;
 	
 }
 
@@ -62,9 +68,11 @@ Hero::Hero(std::string name,  Animation animation_mass[],Vector2f position,int h
 	H_DXL = NULL;
 	H_Speed = 1.0;
 	K_ON = true;
-	H_onGround = false;
+	_onGround = false;
 	H_JumpIndex = 5.0;
 	H_Jump = false;
+	invulnerability = false;
+	invulnerability = 0;
 }
 
 
@@ -82,6 +90,13 @@ void Hero::setHeroArm(int arm)
 	H_Arm = arm;
 }
 
+void Hero::takeDamage(int damage){
+	if (!invulnerability){
+		H_Hp -= damage;
+	    invulnerability = true;
+	}
+}
+
 inline void Hero::setHeroSpeed(float hs)
 {
 	H_Speed = hs/300;
@@ -93,10 +108,10 @@ inline void Hero::collision(std::vector<lv::Object> &allObj)
 	for (int i = 0; i < allObj.size(); i++)
 	{   
 	
-		if (getRect().intersects(allObj[i].rect)){
+		if (getGlobalBounds().intersects(allObj[i].rect)){
 			if (allObj[i].name == "ground")
 			{
-			 H_onGround = true;
+			 _onGround = true;
 			 move(0, -0.5*time.asMilliseconds());// Отталкиваем от земли 
 			
 			
@@ -186,11 +201,11 @@ inline int Hero::getHeroVectorMoveLast()
 inline void Hero::heroKeyPressed(bool K_ON)
 {
 // Управление персонажем если есть лушче вариант к примеру через кейс, но пока оставлю так
-	if (Keyboard::isKeyPressed(Keyboard::Space)&&(H_onGround))
+	if (Keyboard::isKeyPressed(Keyboard::Space)&&(_onGround))
 	{
 		//H_DX = 1;
 		//H_DXL = 1;
-		H_onGround = false;
+		_onGround = false;
 		H_Jump = true;
 		return;
 	}  
@@ -238,6 +253,16 @@ int Hero::getHeroArm()
 void Hero::updateAndDraw(Time &time, std::vector<lv::Object> &allObj, RenderWindow &window)
 {
 	this->time = time;
+	if (invulnerability){
+		_Animation.setColor(Color::Red);
+		invulnerabilityTimer += time.asMilliseconds();
+		if (invulnerabilityTimer > 3000){
+			invulnerability = false;
+		}
+	}
+	else{
+		_Animation.setColor(Color::White);
+	}
 	heroKeyPressed(K_ON);
 	swapHeroAnimation();
 	window.draw(_Animation);
@@ -257,7 +282,7 @@ void Hero::updateAndDraw(Time &time, std::vector<lv::Object> &allObj, RenderWind
 void Hero::HeroJump()
 {
 	
-	if (H_onGround == false && H_Jump == true)
+	if (_onGround == false && H_Jump == true)
 	{
 		
 		move(0, -H_Speed*time.asMilliseconds()*H_JumpIndex);
@@ -284,7 +309,7 @@ public:
 	  Gravi();
 	  Gravi(float gravi);
 	~ Gravi();
-	void update(Hero &hero, Time &time);
+	void update(Entity &hero, Time &time);
 private:
 	float gravi;
 };
@@ -304,7 +329,7 @@ Gravi::Gravi()
 {
 }
 
- inline void Gravi::update(Hero & hero,Time &time)
+ inline void Gravi::update(Entity &hero,Time &time)
  {
 	 hero.move(0, gravi*time.asMilliseconds());
 

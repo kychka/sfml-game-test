@@ -3,7 +3,7 @@
 #include "..\Hero\AnimatedSprite.hpp"
 #include "..\Hero\Animation.hpp"
 #include "..\Level\Level.h"
-#include<SFML/Graphics.hpp>
+#include<SFML\Graphics.hpp>
 
 using namespace sf;
 
@@ -11,11 +11,12 @@ class Entity{
 public:
 	Entity(std::string name, Animation animation_mass[],Vector2f position);
 	Entity();
-	~Entity(){};
+	~Entity();
 	void setPossition(float x, float y);
 	void setAnimationSpeed(float as);
 	void move(float mx, float  my);
 	void draw(RenderWindow &window);
+	bool _onGround;
                
 	void setAnimation(Animation animation_mass[]);
 	Vector2f getCenter();
@@ -25,7 +26,8 @@ public:
 	void setHeight(float h);
 	float getWidht();
 	float getHeight();
-	FloatRect getRect();
+	FloatRect getGlobalBounds();
+	FloatRect getLocalBounds();
 	
 	virtual void updateAndDraw(Time &time, std::vector<lv::Object> &allObj, RenderWindow &window) = 0; //принимает вектор со всеми обьектами на карте
 	Vector2f X_Y_Poss;
@@ -36,6 +38,9 @@ public:
 	Time time;
 };
 
+Entity::~Entity(){
+
+}
 Entity::Entity(){
 
 	X_Y_Poss.x = NULL;
@@ -91,8 +96,12 @@ void Entity::playAnim(int num){
 	_Animation.play(_MassAnim[num]);
 }
 
-FloatRect Entity::getRect(){
+FloatRect Entity::getGlobalBounds(){
 	return _Animation.getGlobalBounds();
+}
+
+FloatRect Entity::getLocalBounds(){
+	return _Animation.getLocalBounds();
 }
 
 
