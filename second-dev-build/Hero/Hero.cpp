@@ -1,29 +1,32 @@
-#include "Hero.h"
+п»ї#include "Hero.h"
 
-Hero::Hero()
-{
-	// Конструктор по умолчанию 
-	H_Name = "Hero";
+Hero::Hero() :Entity(){
+	// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ 
 	H_Hp = 10;
 	H_Arm = 10;
-	H_X_Y_Poss.x = NULL;
-	H_X_Y_Poss.y = NULL;
 	H_DX = NULL;
 	H_DXL = NULL;
 	H_Speed = 1.0;
-	H_FrameTime = NULL;
 	K_ON = true;
-	H_onGround = false;
+	_onGround = false;
 	H_JumpIndex = 5.0;
 	H_Jump = false;
+	invulnerability = false;
+	invulnerabilityTimer = 0;
 }
 
-Hero::Hero(std::string name, int hp, int arm, Animation  animation_mass[])
-{
-	H_Name = name;
+Hero::Hero(std::string name, Animation animation_mass[], Vector2f position, int hp, int arm) :Entity(name, animation_mass, position){
 	H_Hp = hp;
 	H_Arm = arm;
-	H_MassAnim = animation_mass;
+	H_DX = NULL;
+	H_DXL = NULL;
+	H_Speed = 1.0;
+	K_ON = true;
+	_onGround = false;
+	H_JumpIndex = 5.0;
+	H_Jump = false;
+	invulnerability = false;
+	invulnerability = 0;
 }
 
 
@@ -41,16 +44,11 @@ void Hero::setHeroArm(int arm)
 	H_Arm = arm;
 }
 
-void Hero::setHeroPossition(float x, float y)
-{
-	H_X_Y_Poss.x = x;
-	H_X_Y_Poss.y = y;
-	H_Animation.setPosition(x, y);
-}
-
-void Hero::setHeroAnimationSpeed(float as)
-{
-	H_Animation.setAnimPropers(sf::seconds(as / 10), true, false);
+void Hero::takeDamage(int damage){
+	if (!invulnerability){
+		H_Hp -= damage;
+		invulnerability = true;
+	}
 }
 
 void Hero::setHeroSpeed(float hs)
@@ -58,83 +56,68 @@ void Hero::setHeroSpeed(float hs)
 	H_Speed = hs / 300;
 }
 
-void Hero::moveHero(float mx, float my)
-{
-	H_X_Y_Poss.x += mx;
-	H_X_Y_Poss.y += my;
-	H_Animation.move(mx, my);
-}
 
-void Hero::drawHero(RenderWindow &window)
+void Hero::collision(std::vector<lv::Object> &allObj)
 {
-	window.draw(H_Animation);
-}
-
-void Hero::collisionHero(std::vector<lv::Object> &objSolid, std::vector<lv::Object> &objGround)
-{
-	for (int i = 0; i < objGround.size(); i++)
+	for (int i = 0; i < allObj.size(); i++)
 	{
-		if (H_Animation.getGlobalBounds().intersects(objGround[i].rect))
-		{
-			H_onGround = true;
-			moveHero(0, -0.5*time.asMilliseconds());// Отталкиваем от земли
+		if (getGlobalBounds().intersects(allObj[i].rect)){
+			if (allObj[i].name == "ground")
+			{
+				_onGround = true;
+				move(0, -0.5*time.asMilliseconds());// РћС‚С‚Р°Р»РєРёРІР°РµРј РѕС‚ Р·РµРјР»Рё 
+			}
+			if (allObj[i].name == "Solid")
+			{
+				if (H_DX == 2) { move(-H_Speed* time.asMilliseconds(), 0); } // РѕС‚ Р±РѕРєРѕРІС‹С… СЃС‚РѕСЂРѕРЅ 
+				if (H_DX == 4) { move(H_Speed *time.asMilliseconds(), 0); }
+			}
 		}
 	}
-	for (int i = 0; i < objSolid.size(); i++)
-	{
-		if (H_Animation.getGlobalBounds().intersects(objSolid[i].rect))
-		{
-			if (H_DX == 2) { moveHero(-H_Speed* time.asMilliseconds(), 0); } // от боковых сторон 
-			if (H_DX == 4) { moveHero(H_Speed *time.asMilliseconds(), 0); }
-		}
-	}
-}
-
-void Hero::setHeroAnimation(Animation animation_mass[])
-{
-	H_MassAnim = animation_mass;
 }
 
 Vector2f Hero::getHeroCenter()
 {
-	return Vector2f(H_Animation.getGlobalBounds().left + H_Animation.getGlobalBounds().height / 2, H_Animation.getGlobalBounds().top + H_Animation.getGlobalBounds().width / 2);
+	return Vector2f(_Animation.getGlobalBounds().left + _Animation.getGlobalBounds().height / 2, _Animation.getGlobalBounds().top + _Animation.getGlobalBounds().width / 2);
 }
+
 
 void Hero::swapHeroAnimation()
 {
-	// Предпологается загрузка анимаций из файла 
-	if (!H_Animation.isPlaying())
+	// РџСЂРµРґРїРѕР»РѕРіР°РµС‚СЃСЏ Р·Р°РіСЂСѓР·РєР° Р°РЅРёРјР°С†РёР№ РёР· С„Р°Р№Р»Р° 
+
+	if (!_Animation.isPlaying())
 	{
-		H_Animation.play(H_MassAnim[3]); // Анимация по дефолту (если не выставить то при проверке на колизию будет краш, так как он будет запрашивать данные о кадре а тоесть его позици размер итд.)
+		playAnim(3); // РђРЅРёРјР°С†РёСЏ РїРѕ РґРµС„РѕР»С‚Сѓ (РµСЃР»Рё РЅРµ РІС‹СЃС‚Р°РІРёС‚СЊ С‚Рѕ РїСЂРё РїСЂРѕРІРµСЂРєРµ РЅР° РєРѕР»РёР·РёСЋ Р±СѓРґРµС‚ РєСЂР°С€, С‚Р°Рє РєР°Рє РѕРЅ Р±СѓРґРµС‚ Р·Р°РїСЂР°С€РёРІР°С‚СЊ РґР°РЅРЅС‹Рµ Рѕ РєР°РґСЂРµ Р° С‚РѕРµСЃС‚СЊ РµРіРѕ РїРѕР·РёС†Рё СЂР°Р·РјРµСЂ РёС‚Рґ.)
 	}
-	if (H_DXL == 2 && H_DX == 0)  // Правая анимация стоя
+	if (H_DXL == 2 && H_DX == 0)  // РџСЂР°РІР°СЏ Р°РЅРёРјР°С†РёСЏ СЃС‚РѕСЏ
 	{
-		H_Animation.play(H_MassAnim[0]); // в зависимости от индеска масива анимаций
+		playAnim(0); // РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ РёРЅРґРµСЃРєР° РјР°СЃРёРІР° Р°РЅРёРјР°С†РёР№
 		return;
 	}
-	if (H_DXL == 4 && H_DX == 0) // Левая анимация стоя
+	if (H_DXL == 4 && H_DX == 0) // Р›РµРІР°СЏ Р°РЅРёРјР°С†РёСЏ СЃС‚РѕСЏ
 	{
-		H_Animation.play(H_MassAnim[1]);
+		playAnim(1);
 		return;
 	}
-	if (H_DX == 1) // Анимация прыжка
+	if (H_DX == 1) // РђРЅРёРјР°С†РёСЏ РїСЂС‹Р¶РєР°
 	{
 		//H_Animation.play(H_MassAnim[0]);
 		return;
 	}
-	if (H_DX == 3) // Анимация вниз или присел
+	if (H_DX == 3) // РђРЅРёРјР°С†РёСЏ РІРЅРёР· РёР»Рё РїСЂРёСЃРµР»
 	{
-		H_Animation.play(H_MassAnim[2]);
+		playAnim(2);
 		return;
 	}
-	if (H_DX == 2) // Анимация в право 
+	if (H_DX == 2) // РђРЅРёРјР°С†РёСЏ РІ РїСЂР°РІРѕ 
 	{
-		H_Animation.play(H_MassAnim[2]);
+		playAnim(2);
 		return;
 	}
-	if (H_DX == 4) // Анимация в лево
+	if (H_DX == 4) // РђРЅРёРјР°С†РёСЏ РІ Р»РµРІРѕ
 	{
-		H_Animation.play(H_MassAnim[3]);
+		playAnim(3);
 		return;
 	}
 }
@@ -151,12 +134,12 @@ int Hero::getHeroVectorMoveLast()
 
 void Hero::heroKeyPressed(bool K_ON)
 {
-	// Управление персонажем если есть лушче вариант к примеру через кейс, но пока оставлю так
-	if (Keyboard::isKeyPressed(Keyboard::Space) && (H_onGround))
+	// РЈРїСЂР°РІР»РµРЅРёРµ РїРµСЂСЃРѕРЅР°Р¶РµРј РµСЃР»Рё РµСЃС‚СЊ Р»СѓС€С‡Рµ РІР°СЂРёР°РЅС‚ Рє РїСЂРёРјРµСЂСѓ С‡РµСЂРµР· РєРµР№СЃ, РЅРѕ РїРѕРєР° РѕСЃС‚Р°РІР»СЋ С‚Р°Рє
+	if (Keyboard::isKeyPressed(Keyboard::Space) && (_onGround))
 	{
 		//H_DX = 1;
 		//H_DXL = 1;
-		H_onGround = false;
+		_onGround = false;
 		H_Jump = true;
 		return;
 	}
@@ -171,17 +154,17 @@ void Hero::heroKeyPressed(bool K_ON)
 	{
 		H_DX = 2;
 		H_DXL = 2;
-		moveHero(H_Speed*time.asMilliseconds(), 0);
+		move(H_Speed*time.asMilliseconds(), 0);
 		return;
 	}
 	if (Keyboard::isKeyPressed(Keyboard::Left))
 	{
 		H_DX = 4;
 		H_DXL = 4;
-		moveHero(-H_Speed*time.asMilliseconds(), 0);
+		move(-H_Speed*time.asMilliseconds(), 0);
 		return;
 	}
-	H_DX = 0; // если не чего не нажали то вектор 0 тоесть стоим 
+	H_DX = 0; // РµСЃР»Рё РЅРµ С‡РµРіРѕ РЅРµ РЅР°Р¶Р°Р»Рё С‚Рѕ РІРµРєС‚РѕСЂ 0 С‚РѕРµСЃС‚СЊ СЃС‚РѕРёРј 
 }
 
 int Hero::getHeroHp()
@@ -194,27 +177,39 @@ int Hero::getHeroArm()
 	return H_Arm;
 }
 
-void Hero::updateAndDrawHero(Time &time, std::vector<lv::Object> &solidObj, std::vector<lv::Object> &groundObj, RenderWindow &window)
+void Hero::updateAndDraw(Time &time, std::vector<lv::Object> &allObj, RenderWindow &window)
 {
 	this->time = time;
+	if (invulnerability){
+		_Animation.setColor(Color::Red);
+		invulnerabilityTimer += time.asMilliseconds();
+		if (invulnerabilityTimer > 3000){
+			invulnerability = false;
+		}
+	}
+	else{
+		_Animation.setColor(Color::White);
+	}
 	heroKeyPressed(K_ON);
 	swapHeroAnimation();
-	drawHero(window);
+	window.draw(_Animation);
 	HeroJump();
-	H_Animation.updateAnimation(time);
-	collisionHero(solidObj, groundObj);
+	_Animation.updateAnimation(time);
+	collision(allObj);
 	
 	if (H_Hp == 0)
 	{
 		K_ON = false;
 	}
+
 }
 
 void Hero::HeroJump()
 {
-	if (H_onGround == false && H_Jump == true)
+
+	if (_onGround == false && H_Jump == true)
 	{
-		moveHero(0, -H_Speed*time.asMilliseconds()*H_JumpIndex);
+		move(0, -H_Speed*time.asMilliseconds()*H_JumpIndex);
 		H_JumpIndex -= 0.1;
 
 		if (H_JumpIndex <= 1)
@@ -226,37 +221,34 @@ void Hero::HeroJump()
 	}
 }
 
-Vector2f Hero::getHeroPossition()
-{
-	return H_X_Y_Poss;
-}
-
-/////Гравитация///////
+/////Р“СЂР°РІРёС‚Р°С†РёСЏ///////
 Gravi::Gravi()
 {
 	gravi = NULL;
+
 }
 Gravi::Gravi(float gravi)
 {
 	this->gravi = gravi;
 }
+
 Gravi::~Gravi()
 {
 }
 
-void Gravi::update(Hero & hero, Time &time)
+void Gravi::update(Entity &hero, Time &time)
 {
-	hero.moveHero(0, gravi*time.asMilliseconds());
+	hero.move(0, gravi*time.asMilliseconds());
 }
 
-///Камера///
+///РљР°РјРµСЂР°///
 Kamera::Kamera(Hero &hero, lv::Level &level, RenderWindow &window)
 {
 	this->hero = &hero;
 	this->level = &level;
 	this->window = &window;
-	view.reset(FloatRect(0.0, 0.0, window.getSize().x, window.getSize().y)); // камера по размеру окна
-	MapRect.height = level.GetMapSize().y*level.GetTileSize().y; MapRect.width = level.GetMapSize().x*level.GetTileSize().x; // данные о размере карты 
+	view.reset(FloatRect(0.0, 0.0, window.getSize().x, window.getSize().y)); // РєР°РјРµСЂР° РїРѕ СЂР°Р·РјРµСЂСѓ РѕРєРЅР°
+	MapRect.height = level.GetMapSize().y*level.GetTileSize().y; MapRect.width = level.GetMapSize().x*level.GetTileSize().x; // РґР°РЅРЅС‹Рµ Рѕ СЂР°Р·РјРµСЂРµ РєР°СЂС‚С‹ 
 	L_W_H_Size.x = level.GetMapSize().x*level.GetTileSize().x;
 	L_W_H_Size.y = level.GetMapSize().y*level.GetTileSize().y;
 }
@@ -268,8 +260,7 @@ Kamera::~Kamera()
 {
 }
 
-void Kamera::updateKamera() // Получает центр игрока, из него вычетает половину раземера камеры по каждой из сторон, проверяет привишает это размеры карты и если нет то камере можно следить за игроком 
-
+void Kamera::updateKamera() // РџРѕР»СѓС‡Р°РµС‚ С†РµРЅС‚СЂ РёРіСЂРѕРєР°, РёР· РЅРµРіРѕ РІС‹С‡РµС‚Р°РµС‚ РїРѕР»РѕРІРёРЅСѓ СЂР°Р·РµРјРµСЂР° РєР°РјРµСЂС‹ РїРѕ РєР°Р¶РґРѕР№ РёР· СЃС‚РѕСЂРѕРЅ, РїСЂРѕРІРµСЂСЏРµС‚ РїСЂРёРІРёС€Р°РµС‚ СЌС‚Рѕ СЂР°Р·РјРµСЂС‹ РєР°СЂС‚С‹ Рё РµСЃР»Рё РЅРµС‚ С‚Рѕ РєР°РјРµСЂРµ РјРѕР¶РЅРѕ СЃР»РµРґРёС‚СЊ Р·Р° РёРіСЂРѕРєРѕРј 
 {
 	if (hero->getHeroCenter().x - (view.getSize().x / 2) > 0 && hero->getHeroCenter().x + (view.getSize().x / 2) <MapRect.width)
 	{
@@ -280,8 +271,4 @@ void Kamera::updateKamera() // Получает центр игрока, из него вычетает половину 
 		view.setCenter(view.getCenter().x, hero->getHeroCenter().y);
 	}
 	window->setView(view);
-}
-Vector2f Kamera::getPossition()
-{
-	return Vector2f(view.getCenter().x - view.getSize().x / 2, view.getCenter().y - view.getSize().y / 2);
 }

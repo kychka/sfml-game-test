@@ -1,18 +1,14 @@
-﻿#include "Hero\Hero.h"
-#include "Hero\HpBar\hp_bar.h"
-#include "AudioManager\AudioManager.hpp"
-#include "Menu\button.h"
-#include "Menu\pause.h"
-#include "Menu\startmenu.h"
+﻿#include "Hero/Hero.h"
+#include "Hero/HpBar/hp_bar.h"
+#include "AudioManager/AudioManager.hpp"
+#include "Menu/button.h"
+#include "Menu/pause.h"
+#include "Menu/startmenu.h"
 
 using namespace sf;
 using namespace lv;
 int main()
 {
-
-
-
-	
 	RenderWindow window(VideoMode(1312, 400), "Skarlet");
 
 	StartMenu startMenu(window);
@@ -47,9 +43,9 @@ int main()
 
 
 	Hero her;
-	her.setHeroAnimation(PlayerAnim);
-	her.setHeroPossition(80, 500);
-	her.setHeroAnimationSpeed(1.0f);
+	her.setAnimation(PlayerAnim);
+	her.setPossition(80, 500);
+	her.setAnimationSpeed(1.0f);
 	her.setHeroSpeed(60);
 
 	Kamera kamera(her, map, window);
@@ -87,7 +83,7 @@ int main()
 
 		window.clear();
 		map.Draw(window);
-		her.updateAndDrawHero(frameTime, solidObj, groundObj, window);
+		her.updateAndDraw(frameTime, /*solidObj,*/ groundObj, window);
 		renderHpBar(her.getHeroHp()+50,kamera.getPossition().x+10 , kamera.getPossition().y+10, 130, 23, window, Color::Red);
 		window.display();
 		gravi.update(her, frameTime);
