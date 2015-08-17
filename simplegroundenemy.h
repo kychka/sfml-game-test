@@ -5,6 +5,7 @@
 
 class SimpleGroundEnemy:public Enemy
 {
+    SimpleGroundEnemy();
     SimpleGroundEnemy(Vector2f position, String name, int hp, int arm, Animation animation_mass[]);
     ~SimpleGroundEnemy();
     void collision(std::vector<lv::Object> &allObj);

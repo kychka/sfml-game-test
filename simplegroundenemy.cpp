@@ -1,5 +1,10 @@
 #include "simplegroundenemy.h"
 
+SimpleGroundEnemy::SimpleGroundEnemy():Enemy()
+{
+
+}
+
 SimpleGroundEnemy::SimpleGroundEnemy(Vector2f position, String name, int hp, int arm, Animation animation_mass[]) :Enemy(position, name, hp, arm, *animation_mass[])
 {
     E_DX = NULL;
@@ -17,19 +22,19 @@ SimpleGroundEnemy::~SimpleGroundEnemy()
 {
 
 }
-SimpleGroundEnemy::collision(std::vector<lv::Object> &allObj)
+void SimpleGroundEnemy::collision(std::vector<lv::Object> &allObj)
 {
-    void  Enemy::collision(&allObj);
+     Enemy::collision(&allObj);
 }
-SimpleGroundEnemy::getDamage()
+int SimpleGroundEnemy::getDamage()
 {
-    void Enemy::getDamage();
+     Enemy::getDamage();
 }
-SimpleGroundEnemy::isAlive()
+bool SimpleGroundEnemy::isAlive()
 {
-    void Enemy::isAlive();
+     Enemy::isAlive();
 }
-SimpleGroundEnemy::setDamage(int damage)
+void SimpleGroundEnemy::setDamage(int damage)
 {
-    void Enemy::setDamage(damage);
+    Enemy::setDamage(damage);
 }
