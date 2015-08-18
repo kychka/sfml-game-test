@@ -1,4 +1,5 @@
-#include "startmenu.h"
+﻿#include "startmenu.h"
+#include "../AudioManager/AudioManager.hpp"
 
 StartMenu::StartMenu(RenderWindow &window):
 	_window(window),
@@ -31,8 +32,10 @@ void StartMenu::exec(){
 					case setting: // Настройки
 						//start_settings();
 						break;
-					case autors:
-						//Show_autors();
+					case autors:{
+						Captions c(_window);
+						c.show();
+					}
 						break;
 					case quit:
 						_window.close();

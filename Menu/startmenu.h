@@ -1,4 +1,4 @@
-#ifndef STARTMENU_H
+﻿#ifndef STARTMENU_H
 #define STARTMENU_H
 
 #include <SFML/Graphics.hpp>
@@ -6,6 +6,7 @@
 #include <SFML/System.hpp>
 
 #include "button.h"
+#include "captions.h"
 
 using namespace sf;
 /* Класс-меню перед началом игры

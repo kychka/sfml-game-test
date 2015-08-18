@@ -1,10 +1,9 @@
-#ifndef PAUSE_H
+﻿#ifndef PAUSE_H
 #define PAUSE_H
 
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
-
 #include "button.h"
 
 using namespace sf;
@@ -36,6 +35,7 @@ private:
 	RectangleShape _menu; // Просто синяя полоска
 	Event _event; // Главное окно наше, посему мы обрабатываем события
 	Button_current _focus_button; // Какая кнопка сейчас выделена?
+	View view;// Камера
 };
 
 #endif // PAUSE_H
