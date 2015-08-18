@@ -277,11 +277,10 @@ void Hero::updateAndDrawHero(float frametime, Time &time, std::vector<lv::Object
 	this->time = time;
 	H_Animation.updateAnimation(time);
 	drawHero(window);
-	updateGravi(frametime);
 	heroControl(solidObj, groundObj, frametime);
 	collisionHeroWithX(solidObj, frametime);
 	collisionHeroWithY(solidObj, frametime);
-
+	updateGravi(frametime);
 
 
 }
