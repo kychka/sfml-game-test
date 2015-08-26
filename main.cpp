@@ -29,7 +29,6 @@ int main()
 	groundObj = map.GetObjects("ground"); // земля, пол 
 	allObj = map.GetAllObjects();
 
-
 	Texture heroRight; ///Текстура нашего игрока 
 	heroRight.loadFromFile("resources/images/TanyaRunRight.png");
 
@@ -78,12 +77,13 @@ int main()
 	her.setHeroSpeed(80);
 	her.setHeroJump(6.5);
 	her.setGraviForHero(3.3);
-	Vector2f enmPosition(150, 500);
-	SimpleGroundEnemy enm(enmPosition,"Enemy",50,50,PlayerAnim);
-	enm.setAnimationSpeed(0.6f);
-
 	Kamera kamera(her, map, window);
 
+	std::vector<SimpleGroundEnemy*> enemies;
+	std::vector<SimpleGroundEnemy*>::iterator it;
+
+	/*enemies.push_back(new SimpleGroundEnemy(her, Vector2f(500, 500), "SimpleGroundEnemy", 50, 50, PlayerAnim));*/
+	SimpleGroundEnemy enm(her, Vector2f(500, 500), "SimpleGroundEnemy", 50, 50, PlayerAnim);
 	Clock clock;// Наши часики 
 	Time time;
 	float frametime = NULL;
@@ -120,8 +120,11 @@ int main()
 
 		window.clear();
 		map.Draw(window);
-		her.updateAndDrawHero(frametime, time, solidObj, groundObj, window);
+		/*for (it = enemies.begin(); it != enemies.end(); it++){
+			(*it)->updateAndDraw(time, allObj, window);
+		}*/
 		enm.updateAndDraw(time, allObj, window);
+		her.updateAndDrawHero(frametime, time, solidObj, groundObj, window);
 		renderHpBar(her.getHeroHp() + 50, kamera.getPossition().x + 10, kamera.getPossition().y + 10, 130, 23, window, Color::Red);
 		window.display();
 		kamera.updateKamera();
