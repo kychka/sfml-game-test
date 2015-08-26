@@ -43,28 +43,28 @@ void SimpleGroundEnemy::setDamage(int damage)
 void SimpleGroundEnemy::collisionWithHero(){
 	std::cout << "start collisionWithHero\n";
 	
-	if (getGlobalBounds().intersects(targetHero->getGlobalBounds())){
+	if (getGlobalBounds().intersects(targetHero.getGlobalBounds())){
 		std::cout << "1\n";
-		if (targetHero->getDirectory() == 0){
+		if (targetHero.getDirectory() == 0){
 			std::cout << "2\n";         //если игрок идет в лево
-			targetHero->setHeroPossition(getPossition().x + getGlobalBounds().width, getPossition().y); std::cout << "3\n"; //отталкиваем его вправо
+			targetHero.setHeroPossition(getPossition().x + getGlobalBounds().width, getPossition().y); std::cout << "3\n"; //отталкиваем его вправо
 		}
-		if (targetHero->getDirectory() == 1){
+		if (targetHero.getDirectory() == 1){
 			std::cout << "4\n";         //если игрок идет вправо
-			targetHero->setHeroPossition(getPossition().x - targetHero->getGlobalBounds().width, getPossition().y); std::cout << "5\n";//отталкиваем его влево
+			targetHero.setHeroPossition(getPossition().x - targetHero.getGlobalBounds().width, getPossition().y); std::cout << "5\n";//отталкиваем его влево
 		}
-		if (targetHero->getDirectory() == 4){
+		if (targetHero.getDirectory() == 4){
 			std::cout << "6\n";//если игрок стоит
 			if (E_DX == 0){
 				std::cout << "7\n";          //если враг идет влево
-				targetHero->setHeroPossition(getPossition().x - targetHero->getGlobalBounds().width, getPossition().y); std::cout << "8\n";//отталкиваем его влево
+				targetHero.setHeroPossition(getPossition().x - targetHero.getGlobalBounds().width, getPossition().y); std::cout << "8\n";//отталкиваем его влево
 			}
 			if (E_DX == 1){
 				std::cout << "9\n";          //если враг идет вправо
-				targetHero->setHeroPossition(getPossition().x + getGlobalBounds().width, getPossition().y); std::cout << "10\n"; //отталкиваем его вправо
+				targetHero.setHeroPossition(getPossition().x + getGlobalBounds().width, getPossition().y); std::cout << "10\n"; //отталкиваем его вправо
 			}
 		}
-		targetHero->setColor(Color::Red); std::cout << "11\n";
+		targetHero.setColor(Color::Red); std::cout << "11\n";
 	}
 }
 

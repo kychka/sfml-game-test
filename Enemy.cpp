@@ -7,6 +7,7 @@ Enemy::Enemy() :Entity(){
 	E_Life = true;
 	_onGround = false;
 	E_damage = 5;
+
 	
 }
 
@@ -17,7 +18,7 @@ Enemy::Enemy(Hero &her,Vector2f position, String name, int hp, int arm, Animatio
 	E_Life = true;
 	_onGround = false;
 	E_damage = 15;
-	targetHero = &her;
+	targetHero = her;
 }
 Enemy::~Enemy(){
 }
@@ -92,6 +93,6 @@ void Enemy::swapAnimation()
 	}
 }
 
-void Enemy::setTarget(Hero &her){
-	targetHero = &her;
+void Enemy::setTarget(Hero her){
+	Enemy::targetHero = her;
 }

@@ -84,6 +84,8 @@ int main()
 
 	/*enemies.push_back(new SimpleGroundEnemy(her, Vector2f(500, 500), "SimpleGroundEnemy", 50, 50, PlayerAnim));*/
 	SimpleGroundEnemy enm(her, Vector2f(500, 500), "SimpleGroundEnemy", 50, 50, PlayerAnim);
+	enm.setAnimationSpeed(0.6f);
+
 	Clock clock;// Наши часики 
 	Time time;
 	float frametime = NULL;

@@ -17,7 +17,7 @@ public:
 	bool isAlive();
 	void setDamage(int damage);
 	int getDamage();
-	void setTarget(Hero &her);
+	void setTarget(Hero her);
 protected:
 	void swapAnimation();
 	int E_damage;
@@ -29,7 +29,7 @@ protected:
 	RectangleShape body;
 	int E_DX;
 	int E_DXL;
-	Hero *targetHero;
+	Hero& targetHero;
 };
 
 #endif
