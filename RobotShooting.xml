@@ -1,0 +1,6 @@
+<!DOCTYPE SpriteDecomposer>
+<sprites image= "robotShooting.png" transparentColor="">
+ <animation title="Default animation" delay="150">
+  <cut w="744" x="196" y="266" h="798" row="1" col="1"/>
+</animation>
+</sprites>
