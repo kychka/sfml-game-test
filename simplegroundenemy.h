@@ -16,6 +16,8 @@ public:
 	int getDamage();
 	void collisionWithHero();
 	void updateAndDraw(Time &time, std::vector<lv::Object> &allObj, RenderWindow &window);
+	bool seeTarget(std::vector<lv::Object> &allObj, RenderWindow &window);
+	float distance;
 };
 
 #endif // SIMPLEGROUNDENEMY_H
