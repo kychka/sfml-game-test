@@ -9,7 +9,7 @@ using namespace sf;
 
 class Enemy:public Entity{
 public:
-	Enemy();
+	Enemy(Hero &her);
 	Enemy(Hero &her,Vector2f position, String name, int hp, int arm, Animation animation_mass[]);
 	~Enemy();
 	void collision(std::vector<lv::Object> &allObj);
@@ -17,7 +17,7 @@ public:
 	bool isAlive();
 	void setDamage(int damage);
 	int getDamage();
-	void setTarget(Hero her);
+	/*void setTarget(Hero &her);*/
 protected:
 	void swapAnimation();
 	int E_damage;

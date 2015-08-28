@@ -1,6 +1,6 @@
 ﻿#include "Enemy.h"
 
-Enemy::Enemy() :Entity(){
+Enemy::Enemy(Hero &her) :Entity(),targetHero(her){
 	E_DX = NULL;
 	E_DXL = NULL;
 	E_Speed = 1.0;
@@ -11,14 +11,13 @@ Enemy::Enemy() :Entity(){
 	
 }
 
-Enemy::Enemy(Hero &her,Vector2f position, String name, int hp, int arm, Animation animation_mass[]) :Entity(name, animation_mass, position){
+Enemy::Enemy(Hero &her,Vector2f position, String name, int hp, int arm, Animation animation_mass[]) :Entity(name, animation_mass, position),targetHero(her){
 	E_HP = hp;
 	E_ARM = arm;
 	E_Speed = 1.0;
 	E_Life = true;
 	_onGround = false;
 	E_damage = 15;
-	targetHero = her;
 }
 Enemy::~Enemy(){
 }
@@ -93,6 +92,7 @@ void Enemy::swapAnimation()
 	}
 }
 
-void Enemy::setTarget(Hero her){
-	Enemy::targetHero = her;
-}
+//void Enemy::setTarget(Hero &her):targetHero(her) {
+//
+//	
+//}

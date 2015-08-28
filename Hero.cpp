@@ -26,6 +26,9 @@ Hero::Hero()
 	playerHitbox.setFillColor(Color::Black); /// это для теста
 
 
+	immunityForDamage = false;
+	immunityTaimer = 0;
+
 
 	A_1.x = playerHitbox.getPosition().x;
 	A_1.y = playerHitbox.getPosition().y;
@@ -276,11 +279,12 @@ void Hero::updateAndDrawHero(float frametime, Time &time, std::vector<lv::Object
 {
 	this->time = time;
 	H_Animation.updateAnimation(time);
+	immunity(frametime);
 	drawHero(window);
+	updateGravi(frametime);
 	heroControl(solidObj, groundObj, frametime);
 	collisionHeroWithX(solidObj, frametime);
 	collisionHeroWithY(solidObj, frametime);
-	updateGravi(frametime);
 
 
 
@@ -363,16 +367,11 @@ Vector2f Hero::getHeroPossition()
 }
 
 FloatRect Hero::getGlobalBounds(){
-	std::cout << "Hero.getGlobalBounds()\n";
-	return H_Animation.getGlobalBounds();
+	return playerHitbox.getGlobalBounds();
 }
 
 int Hero::getDirectory(){
 	return state;
-}
-
-void Hero::setColor(Color col){
-	H_Animation.setColor(col);
 }
 
 /////Гравитация///////
@@ -429,4 +428,25 @@ void Kamera::updateKamera() // Получает центр игрока, из н
 Vector2f Kamera::getPossition()
 {
 	return Vector2f(view.getCenter().x - view.getSize().x / 2, view.getCenter().y - view.getSize().y / 2);
+}
+
+void Hero::takeDamage(int dam){
+
+	if (!immunityForDamage){//если у игрока нет иммунитета к урону
+		H_Hp -= dam;//из жизней вычитается урон
+		H_Animation.setColor(Color::Red);//игрок окрашивается в красный
+		immunityForDamage = true;//включается иммунитет к урону
+		}
+	
+}
+
+void Hero::immunity(float time){
+	if (immunityForDamage){//если иммунитет включен
+		immunityTaimer += time;//то к таймеру прибавляется время
+	}
+	if (immunityTaimer >= 3000){//если на таймере 3000 милисекунд или больше
+		immunityTaimer = 0;//таймер обнуляется
+		immunityForDamage = false;//иммунитет к урону выключается
+		H_Animation.setColor(Color::White);//игрок возвращается к своему первичному цвету
+	}
 }

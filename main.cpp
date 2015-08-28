@@ -69,8 +69,8 @@ int main()
 	PlayerAnim[7].setSpriteSheet(heroFireRight);
 	PlayerAnim[7].loadFromXml("resources/animations/TanyaRunFireRight.xml");//Стрельба стоя право 
 
-
-	Hero her;
+	std::cout << "1\n";
+	Hero her; std::cout << "2\n";
 	her.setHeroAnimation(PlayerAnim);
 	her.setHeroPossition(80, 500);
 	her.setHeroAnimationSpeed(0.6f);
@@ -79,8 +79,8 @@ int main()
 	her.setGraviForHero(3.3);
 	Kamera kamera(her, map, window);
 
-	std::vector<SimpleGroundEnemy*> enemies;
-	std::vector<SimpleGroundEnemy*>::iterator it;
+	/*std::vector<SimpleGroundEnemy*> enemies;
+	std::vector<SimpleGroundEnemy*>::iterator it;*/
 
 	/*enemies.push_back(new SimpleGroundEnemy(her, Vector2f(500, 500), "SimpleGroundEnemy", 50, 50, PlayerAnim));*/
 	SimpleGroundEnemy enm(her, Vector2f(500, 500), "SimpleGroundEnemy", 50, 50, PlayerAnim);
@@ -126,7 +126,7 @@ int main()
 			(*it)->updateAndDraw(time, allObj, window);
 		}*/
 		enm.updateAndDraw(time, allObj, window);
-		her.updateAndDrawHero(frametime, time, solidObj, groundObj, window);
+		her.updateAndDrawHero(frametime, time, solidObj, groundObj , window);
 		renderHpBar(her.getHeroHp() + 50, kamera.getPossition().x + 10, kamera.getPossition().y + 10, 130, 23, window, Color::Red);
 		window.display();
 		kamera.updateKamera();

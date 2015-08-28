@@ -34,7 +34,8 @@ public:
 	void heroControl(std::vector<lv::Object> &solidObj, std::vector<lv::Object> &groundObj, float frametime);
 	FloatRect getGlobalBounds();
 	int getDirectory();
-	void setColor(Color col);
+	void takeDamage(int dam);//функция получения урона
+	void immunity(float time);//проверяет включена ли неуязвимость и проверяет время
 private:
 	enum { left, right, up, down, stay } state; ///состояния персонажа. нужно для задавания анимации
 	enum { StayLeft, StayRight, } StayState;
@@ -65,6 +66,8 @@ private:
 	bool collisionY;
 	void updateGravi(float frametime);
 	void heroKeyPressed(bool K_ON);
+	bool immunityForDamage;
+	float immunityTaimer;
 	Vector2f H_X_Y_Poss;                   // Позиция по х и у
 	String H_Name;                        // Имя
 	Animation *H_MassAnim;               // Указатель на силку Анимации
