@@ -1,6 +1,17 @@
 <!DOCTYPE SpriteDecomposer>
-<sprites image= "robotShooting.png" transparentColor="">
+<sprites image="RobotShooting.png" transparentColor="">
  <animation title="Default animation" delay="150">
-  <cut w="744" x="196" y="266" h="798" row="1" col="1"/>
-</animation>
+  <cut w="186" x="0" y="1" h="266" row="1" col="1"/>
+  <cut w="186" x="186" y="1" h="266" row="1" col="1"/>
+  <cut w="186" x="372" y="1" h="266" row="1" col="1"/>
+  <cut w="186" x="558" y="1" h="266" row="1" col="1"/>
+  <cut w="186" x="0" y="267" h="266" row="1" col="1"/>
+  <cut w="186" x="186" y="267" h="266" row="1" col="1"/>
+  <cut w="186" x="372" y="267" h="266" row="1" col="1"/>
+  <cut w="186" x="558" y="267" h="266" row="1" col="1"/>
+  <cut w="186" x="0" y="533" h="266" row="1" col="1"/>
+  <cut w="186" x="186" y="533" h="266" row="1" col="1"/>
+  <cut w="186" x="372" y="533" h="266" row="1" col="1"/>
+  <cut w="186" x="558" y="533" h="266" row="1" col="1"/>
+ </animation>
 </sprites>

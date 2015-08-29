@@ -5,6 +5,7 @@
 #include "Menu\pause.h"
 #include "Menu\startmenu.h"
 #include "Hero\simplegroundenemy.h"
+#include <iostream>
 
 using namespace sf;
 using namespace lv;
@@ -30,18 +31,19 @@ int main()
 	allObj = map.GetAllObjects();
 
 
-    Texture SimpleGroundEnemyRun; //Текстура врага для бега
-    Texture SimpleGroundEnemyShoot;//Текстура врага для стрельбы
-    SimpleGroundEnemyRun.loadFromFile("resources/images/RobotWalk.png");
-    SimpleGroundEnemyShoot.loadFromFile("resources/images/robotShooting.png");
+	Texture SimpleGroundEnemyRun; //Текстура врага для бега
+	SimpleGroundEnemyRun.loadFromFile("resources/images/RobotWalk.png");
 
-    Animation EnemyAnimation[1];
+	Texture SimpleGroundEnemyShoot;//Текстура врага для стрельбы
+	SimpleGroundEnemyShoot.loadFromFile("resources/images/RobotShooting.png");
 
-    EnemyAnimation[0].setSpriteSheet(SimpleGroundEnemyRun); //Анимация бега врага
-    EnemyAnimation[0].loadFromXml("resources/animation/RobotWalk.xml");
+	Animation EnemyAnimation[2];
 
-    EnemyAnimation[1].setSpriteSheet(SimpleGroundEnemyShoot); //Анимация стрельбы врага
-    EnemyAnimation[1].loadFromXml("resources/animation/RobotShooting.xml");
+	EnemyAnimation[0].setSpriteSheet(SimpleGroundEnemyRun); //Анимация бега врага
+	EnemyAnimation[0].loadFromXml("resources/animations/RobotWalk.xml");
+
+	EnemyAnimation[1].setSpriteSheet(SimpleGroundEnemyShoot); //Анимация стрельбы врага
+	EnemyAnimation[1].loadFromXml("resources/animations/RobotShooting.xml");
 
 
 	Texture heroRight; ///Текстура нашего игрока 
@@ -87,14 +89,14 @@ int main()
 
 	Hero her;
 	her.setHeroAnimation(PlayerAnim);
-    her.setHeroPossition(80, 500);
+	her.setHeroPossition(80, 500);
 	her.setHeroAnimationSpeed(0.6f);
 	her.setHeroSpeed(80);
 	her.setHeroJump(6.5);
 	her.setGraviForHero(3.3);
-    Vector2f enmPosition(550, 570);
-    SimpleGroundEnemy enm(enmPosition,"Enemy", 50, 50, EnemyAnimation);
-	enm.setAnimationSpeed(0.6f);
+	Vector2f enmPosition(380, 570);
+	SimpleGroundEnemy enm(enmPosition, "Enemy", 50, 50, EnemyAnimation);
+	enm.setAnimationSpeed(1.1f);
 
 	Kamera kamera(her, map, window);
 

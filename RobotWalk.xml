@@ -1,6 +1,11 @@
-<!DOCTYPE SpriteDecomposer (View Source for full doctype...)> 
-- <sprites image="RobotWalk.png" transparentColor="">
-- <animation title="Default animation" delay="150">
-<cut w = "540" x ="180" y = "266" h = "532"row = "1" col = "1"/>
-</animation>
+<!DOCTYPE SpriteDecomposer>
+<sprites image="RobotWalk.png" transparentColor="">
+ <animation title="Default animation" delay="150">
+  <cut w="180" x="0" y="1" h="266" row="1" col="1"/>
+  <cut w="180" x="180" y="1" h="266" row="1" col="1"/>
+  <cut w="180" x="360" y="1" h="266" row="1" col="1"/>
+  <cut w="180" x="0" y="267" h="266" row="1" col="1"/>
+  <cut w="180" x="180" y="267" h="266" row="1" col="1"/>
+  <cut w="180" x="360" y="267" h="266" row="1" col="1"/>
+ </animation>
 </sprites>
