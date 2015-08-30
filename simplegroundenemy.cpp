@@ -1,12 +1,12 @@
 ﻿#include "simplegroundenemy.h"
 
-SimpleGroundEnemy::SimpleGroundEnemy(Hero &Her) :Enemy(Her)
+SimpleGroundEnemy::SimpleGroundEnemy(Hero &Her, Kamera &kam) :Enemy(Her,kam)
 {
 	setAnimationSpeed(0.6f);
 	distance = 2000;
 }
 
-SimpleGroundEnemy::SimpleGroundEnemy(Hero &her,Vector2f position, String name, int hp, int arm, Animation animation_mass[]) : Enemy(her,position, name, hp, arm, animation_mass)
+SimpleGroundEnemy::SimpleGroundEnemy(Hero &her, Kamera &kam, Vector2f position, String name, int hp, int arm, Animation animation_mass[]) : Enemy(her, kam, position, name, hp, arm, animation_mass)
 {
 	E_DX = NULL;
 	E_DXL = NULL;
@@ -56,12 +56,12 @@ void SimpleGroundEnemy::collisionWithHero(){
 		}
 		if (targetHero.getDirectory() == 4){
 			//если игрок стоит
-			if (E_DX == 0){
-				          //если враг идет влево
+			if (getGlobalBounds().left>targetHero.getGlobalBounds().left){
+				          //если игрок левее
 				targetHero.setHeroPossition(getPossition().x - targetHero.getGlobalBounds().width, targetHero.getHeroPossition().y);//отталкиваем его влево
 			}
-			if (E_DX == 1){
-				          //если враг идет вправо
+			if (getGlobalBounds().left<targetHero.getGlobalBounds().left){
+				          //если игрок правее
 				targetHero.setHeroPossition(getPossition().x + getGlobalBounds().width, targetHero.getHeroPossition().y); //отталкиваем его вправо
 			}
 		}
@@ -84,71 +84,43 @@ void SimpleGroundEnemy::updateAndDraw(Time &time, std::vector<lv::Object> &allOb
 	}
 }
 
+
+
 bool SimpleGroundEnemy::seeTarget(std::vector<lv::Object> &allObj, RenderWindow &window){//видит ли враг игрока
-	/*if (targetHero.getGlobalBounds().left>getGlobalBounds().left){*/
-	FloatRect visebleZoneRight(getGlobalBounds().left + getGlobalBounds().width, getGlobalBounds().top, distance, 53);//проверка пространства справа от врага
-	FloatRect visebleZoneLeft(getGlobalBounds().left ,getGlobalBounds().top,-distance,53);
-	if (targetHero.getGlobalBounds().left > getGlobalBounds().left + getGlobalBounds().width){
-		for (int i = 0; i < allObj.size(); i++){
-			if (allObj[i].name == "solid"){
-				if (allObj[i].rect.intersects(visebleZoneRight)){
-					if (allObj[i].rect.top > visebleZoneRight.top){
-						visebleZoneRight.height = allObj[i].rect.top - visebleZoneRight.top;
-					}
-					if (allObj[i].rect.top + allObj[i].rect.height < visebleZoneRight.top + visebleZoneRight.height){
-						int x=visebleZoneRight.top = (visebleZoneRight.top + visebleZoneRight.height) - (allObj[i].rect.top + allObj[i].rect.height);
-						visebleZoneRight.height = visebleZoneRight.height - x;
-					}
-					if ((allObj[i].rect.top<visebleZoneRight.top)&&(allObj[i].rect.top + allObj[i].rect.height>visebleZoneRight.top+visebleZoneRight.height)){
-						visebleZoneRight.width = allObj[i].rect.left - (getGlobalBounds().left + getGlobalBounds().width);
-				}
-			}
-		}
-			
-	}
-		if (visebleZoneRight.intersects(targetHero.getGlobalBounds())){
-			_Animation.setColor(Color::Green);
-			return true;
-		}
-		else{
+
+	if (kamera.getVisebleZone().intersects(targetHero.getGlobalBounds())){
+		if ((getGlobalBounds().top > targetHero.getGlobalBounds().top + targetHero.getGlobalBounds().height) || (getGlobalBounds().top + getGlobalBounds().height < targetHero.getGlobalBounds().top)){
+			//если игрок выше или ниже врага
 			return false;
 		}
-
-	}
-	if ((targetHero.getGlobalBounds().left + targetHero.getGlobalBounds().width) < getGlobalBounds().left){
-		for (int i = 0; i < allObj.size(); i++){
-			if (allObj[i].name == "solid"){
-				if (allObj[i].rect.intersects(visebleZoneLeft)){
-					if (allObj[i].rect.top > visebleZoneLeft.top){
-						visebleZoneLeft.height = allObj[i].rect.top - visebleZoneLeft.top;
-					}
-					if (allObj[i].rect.top + allObj[i].rect.height < visebleZoneLeft.top + visebleZoneLeft.height){
-						int x = visebleZoneLeft.top = (visebleZoneLeft.top + visebleZoneLeft.height) - (allObj[i].rect.top + allObj[i].rect.height);
-						visebleZoneLeft.height = visebleZoneRight.height - x;
-					}
-					if ((allObj[i].rect.top<visebleZoneLeft.top) && (allObj[i].rect.top + allObj[i].rect.height>visebleZoneLeft.top + visebleZoneLeft.height)){
-						visebleZoneLeft.width = getGlobalBounds().left - (allObj[i].rect.left + allObj[i].rect.width);
-						visebleZoneLeft.left = getGlobalBounds().left - visebleZoneLeft.width;
-						
+		
+			if (getGlobalBounds().left < targetHero.getGlobalBounds().left){//если игрок правее врага
+				for (int i = 0; i < allObj.size(); i++){//пробегаемся по вектору обьектов
+					if (allObj[i].name == "solid"){//если имя обьекта solid
+						if ((getGlobalBounds().left < allObj[i].rect.left) && (allObj[i].rect.left < targetHero.getGlobalBounds().left)){//есть ли между врагом и игроком обьект солид то..
+							if (!((getGlobalBounds().top < allObj[i].rect.top) && (targetHero.getGlobalBounds().top < allObj[i].rect.top))){//..проверяем может ли враг заглянуть через него сверху
+								if (!((getGlobalBounds().top + getGlobalBounds().height / 2>allObj[i].rect.top + allObj[i].rect.height) && (allObj[i].rect.top + allObj[i].rect.height < targetHero.getGlobalBounds().top + targetHero.getGlobalBounds().height)))
+									//может ли враг заглянуть под обьект
+									return false;
+							}
+						}
 					}
 				}
+				_Animation.setColor(Color::Green);
+				return true;
 			}
-		}
-
-		if (visebleZoneLeft.intersects(targetHero.getGlobalBounds())){
-			_Animation.setColor(Color::Green);
-			return true;
-		}
-		else{
-			return false;
-		}
-
-	}
-		
-	
-		/*RectangleShape rec(Vector2f(visebleZone.top,visebleZone.left));
-		rec.setSize(Vector2f(visebleZone.width,visebleZone.height ));
-		rec.setFillColor(Color::Red);
-		window.draw(rec);*/
-		
+			if (getGlobalBounds().left > targetHero.getGlobalBounds().left){//если игрок левее
+				for (int i = 0; i < allObj.size(); i++){
+					if (allObj[i].name == "solid"){
+						if ((getGlobalBounds().left > allObj[i].rect.left) && (allObj[i].rect.left > targetHero.getGlobalBounds().left)){
+							if (!((getGlobalBounds().top < allObj[i].rect.top) && targetHero.getGlobalBounds().top<allObj[i].rect.top))
+								if (!((getGlobalBounds().top + getGlobalBounds().height / 2>allObj[i].rect.top + allObj[i].rect.height) && (allObj[i].rect.top + allObj[i].rect.height < targetHero.getGlobalBounds().top + targetHero.getGlobalBounds().height)))
+									return false;
+						}
+					}
+				}
+				_Animation.setColor(Color::Green);
+				return true;
+			}
+		}		
 }

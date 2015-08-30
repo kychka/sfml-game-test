@@ -450,3 +450,7 @@ void Hero::immunity(float time){
 		H_Animation.setColor(Color::White);//игрок возвращается к своему первичному цвету
 	}
 }
+
+FloatRect Kamera::getVisebleZone(){
+	return FloatRect(view.getCenter().x-view.getSize().x/2,view.getCenter().y-view.getSize().y/2,view.getSize().x,view.getSize().y);
+}

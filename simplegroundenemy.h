@@ -7,8 +7,8 @@
 class SimpleGroundEnemy :public Enemy
 {
 public:
-	SimpleGroundEnemy(Hero &her);
-	SimpleGroundEnemy(Hero &her,Vector2f position, String name, int hp, int arm, Animation animation_mass[]);
+	SimpleGroundEnemy(Hero &her, Kamera &kam);
+	SimpleGroundEnemy(Hero &her, Kamera &kam, Vector2f position, String name, int hp, int arm, Animation animation_mass[]);
 	~SimpleGroundEnemy();
 	void collision(std::vector<lv::Object> &allObj);
 	bool isAlive();

@@ -118,8 +118,10 @@ private:
 	 ~Kamera();
 	 Vector2f getPossition();
 	 void updateKamera();
- private:
 	 View view;
+	 FloatRect getVisebleZone();
+ private:
+	 
 	 Vector2f K_X_YPoss;
 	 FloatRect MapRect;
 	 Vector2f L_W_H_Size;

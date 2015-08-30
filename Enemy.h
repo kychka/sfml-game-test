@@ -9,8 +9,8 @@ using namespace sf;
 
 class Enemy:public Entity{
 public:
-	Enemy(Hero &her);
-	Enemy(Hero &her,Vector2f position, String name, int hp, int arm, Animation animation_mass[]);
+	Enemy(Hero &her,Kamera &kam);
+	Enemy(Hero &her, Kamera &kam, Vector2f position, String name, int hp, int arm, Animation animation_mass[]);
 	~Enemy();
 	void collision(std::vector<lv::Object> &allObj);
 	virtual void updateAndDraw(Time &time, std::vector<lv::Object> &allObj, RenderWindow &window) = 0;
@@ -30,6 +30,7 @@ protected:
 	int E_DX;
 	int E_DXL;
 	Hero& targetHero;
+	Kamera &kamera;
 };
 
 #endif
