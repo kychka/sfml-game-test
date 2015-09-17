@@ -5,7 +5,6 @@
 #include "Menu\pause.h"
 #include "Menu\startmenu.h"
 #include "Hero\simplegroundenemy.h"
-#include <iostream>
 
 using namespace sf;
 using namespace lv;
@@ -29,22 +28,6 @@ int main()
 	solidObj = map.GetObjects("solid"); // стены итд 
 	groundObj = map.GetObjects("ground"); // земля, пол 
 	allObj = map.GetAllObjects();
-
-
-	Texture SimpleGroundEnemyRun; //Текстура врага для бега
-	SimpleGroundEnemyRun.loadFromFile("resources/images/RobotWalk.png");
-
-	Texture SimpleGroundEnemyShoot;//Текстура врага для стрельбы
-	SimpleGroundEnemyShoot.loadFromFile("resources/images/RobotShooting.png");
-
-	Animation EnemyAnimation[2];
-
-	EnemyAnimation[0].setSpriteSheet(SimpleGroundEnemyRun); //Анимация бега врага
-	EnemyAnimation[0].loadFromXml("resources/animations/RobotWalk.xml");
-
-	EnemyAnimation[1].setSpriteSheet(SimpleGroundEnemyShoot); //Анимация стрельбы врага
-	EnemyAnimation[1].loadFromXml("resources/animations/RobotShooting.xml");
-
 
 	Texture heroRight; ///Текстура нашего игрока 
 	heroRight.loadFromFile("resources/images/TanyaRunRight.png");
@@ -86,19 +69,38 @@ int main()
 	PlayerAnim[7].setSpriteSheet(heroFireRight);
 	PlayerAnim[7].loadFromXml("resources/animations/TanyaRunFireRight.xml");//Стрельба стоя право 
 
-
-	Hero her;
+	std::cout << "1\n";
+	Hero her; std::cout << "2\n";
 	her.setHeroAnimation(PlayerAnim);
 	her.setHeroPossition(80, 500);
 	her.setHeroAnimationSpeed(0.6f);
 	her.setHeroSpeed(80);
 	her.setHeroJump(6.5);
 	her.setGraviForHero(3.3);
-	Vector2f enmPosition(380, 570);
-	SimpleGroundEnemy enm(enmPosition, "Enemy", 50, 50, EnemyAnimation);
-	enm.setAnimationSpeed(1.1f);
-
 	Kamera kamera(her, map, window);
+
+	/*std::vector<SimpleGroundEnemy*> enemies;
+	std::vector<SimpleGroundEnemy*>::iterator it;*/
+
+	/*enemies.push_back(new SimpleGroundEnemy(her, Vector2f(500, 500), "SimpleGroundEnemy", 50, 50, PlayerAnim));*/
+
+    Texture SimpleGroundEnemyRun; //Текстура врага для бега
+    SimpleGroundEnemyRun.loadFromFile("resources/images/RobotWalk.png");
+
+    Texture SimpleGroundEnemyShoot;//Текстура врага для стрельбы
+    SimpleGroundEnemyShoot.loadFromFile("resources/images/RobotShooting.png");
+
+    Animation EnemyAnimation[2];
+
+    EnemyAnimation[0].setSpriteSheet(SimpleGroundEnemyRun); //Анимация бега врага
+    EnemyAnimation[0].loadFromXml("resources/animations/RobotWalk.xml");
+
+    EnemyAnimation[1].setSpriteSheet(SimpleGroundEnemyShoot); //Анимация стрельбы врага
+    EnemyAnimation[1].loadFromXml("resources/animations/RobotShooting.xml");
+
+
+    SimpleGroundEnemy enm(her, kamera, Vector2f(1400, 600), "SimpleGroundEnemy", 50, 50, EnemyAnimation);
+    enm.setAnimationSpeed(0.6f);
 
 	Clock clock;// Наши часики 
 	Time time;
@@ -136,8 +138,11 @@ int main()
 
 		window.clear();
 		map.Draw(window);
-		her.updateAndDrawHero(frametime, time, solidObj, groundObj, window);
+		/*for (it = enemies.begin(); it != enemies.end(); it++){
+			(*it)->updateAndDraw(time, allObj, window);
+		}*/
 		enm.updateAndDraw(time, allObj, window);
+		her.updateAndDrawHero(frametime, time, solidObj, groundObj , window);
 		renderHpBar(her.getHeroHp() + 50, kamera.getPossition().x + 10, kamera.getPossition().y + 10, 130, 23, window, Color::Red);
 		window.display();
 		kamera.updateKamera();
