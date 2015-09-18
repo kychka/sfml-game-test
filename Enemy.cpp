@@ -1,21 +1,23 @@
 ﻿#include "Enemy.h"
 
-Enemy::Enemy() :Entity(){
-	E_DX = NULL;
-	E_DXL = NULL;
-	E_Speed = 1.0;
-	E_Life = true;
-	_onGround = false;
-	E_damage = 5;
+Enemy::Enemy(Hero &her, Kamera &kam) :Entity(), targetHero(her),kamera(kam){
+    E_DX = NULL;
+    E_DXL = NULL;
+    E_Speed = 1.0;
+    E_Life = true;
+    _onGround = false;
+    E_damage = 5;
+
+
 }
 
-Enemy::Enemy(Vector2f position, String name, int hp, int arm, Animation animation_mass[]) :Entity(name, animation_mass, position){
-	E_HP = hp;
-	E_ARM = arm;
-	E_Speed = 1.0;
-	E_Life = true;
-	_onGround = false;
-	E_damage = 15;
+Enemy::Enemy(Hero &her, Kamera &kam, Vector2f position, String name, int hp, int arm, Animation animation_mass[]) :Entity(name, animation_mass, position), targetHero(her),kamera(kam){
+    E_HP = hp;
+    E_ARM = arm;
+    E_Speed = 1.0;
+    E_Life = true;
+    _onGround = false;
+    E_damage = 15;
 }
 Enemy::~Enemy(){
 }
