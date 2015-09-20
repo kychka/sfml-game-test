@@ -16,7 +16,7 @@ public:
 	~Hero();
 
 
-	void setHeroHp(int hp);
+	void setHeroHp(float hp);
 	void setHeroArm(int arm);
 	void setHeroPossition(float x, float y);
 	void setHeroAnimationSpeed(float as);
@@ -27,16 +27,31 @@ public:
 	void moveHero(float mx, float  my);
 	void drawHero(RenderWindow &window);
 	Vector2f getHeroCenter();
-	int getHeroHp();
+	float getHeroHp();
 	int getHeroArm();
 	Vector2f getHeroPossition();
 	void updateAndDrawHero(float frametime, Time &time, std::vector<lv::Object> &solidObj, std::vector<lv::Object> &groundObj, RenderWindow &window);
 	void heroControl(std::vector<lv::Object> &solidObj, std::vector<lv::Object> &groundObj, float frametime);
+	FloatRect getGlobalBounds();
+	int getDirectory();
+	void takeDamage(int dam);//функция получения урона
+	void immunity(float time);//проверяет включена ли неуязвимость и проверяет время
+
+	///////////////////////////////
+	int getFireState();
+	int getStayState();
+	int getheroAnimIndex();
+	void isAmmo_chek(bool is);
+	///////////////////////////////
+
 private:
 	enum { left, right, up, down, stay } state; ///состояния персонажа. нужно для задавания анимации
 	enum { StayLeft, StayRight, } StayState;
 	enum { JumpStay, NoJump } JumpState;
 	enum { Fire, NoFire }FireState;
+
+
+	bool isAmmo;
 
 	float H_DistanceForSolid;
 	float H_Top1_Rotation;// угол от игрока к вершине 1
@@ -52,7 +67,7 @@ private:
 	bool H_onGround;
 	bool K_ON;                                      // Индикатор разрешить управление или нет( по дифолту тру)
 	bool isMove;                                    /// для остановки движения
-	int H_Hp;                                      // Жизни
+	float H_Hp;                                      // Жизни
 	int H_Arm;                                    // Броня
 	float H_Gravi;                               // Гравитация
 	float H_Speed;                             // Cкорость персонажа  
@@ -62,6 +77,8 @@ private:
 	bool collisionY;
 	void updateGravi(float frametime);
 	void heroKeyPressed(bool K_ON);
+	bool immunityForDamage;
+	float immunityTaimer;
 	Vector2f H_X_Y_Poss;                   // Позиция по х и у
 	String H_Name;                        // Имя
 	Animation *H_MassAnim;               // Указатель на силку Анимации
@@ -112,6 +129,8 @@ private:
 	 ~Kamera();
 	 Vector2f getPossition();
 	 void updateKamera();
+	 FloatRect getVisebleZone();
+	 Vector2f getSize();
  private:
 	 View view;
 	 Vector2f K_X_YPoss;

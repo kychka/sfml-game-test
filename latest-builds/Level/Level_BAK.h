@@ -19,7 +19,6 @@ namespace lv
 		sf::Rect<float> rect;
 		sf::Rect <float> rotation; // углы вершин от центра 
 		sf::FloatRect Tops; // две вершины
-		sf::
 		std::map<std::string, std::string> properties;
 		sf::Sprite sprite;
 	};

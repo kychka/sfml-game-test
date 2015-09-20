@@ -28,8 +28,7 @@
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <string>
-#include "../Level/TinyXML/tinystr.h"
-#include "../Level/TinyXML/tinyxml.h"
+#include "../pugiXML/pugixml.hpp"
 #include <conio.h>
 #include <iostream>
 #include <SFML/Graphics.hpp>

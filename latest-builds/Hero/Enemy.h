@@ -3,19 +3,21 @@
 
 #include "Entity.h"
 #include "HpBar/hp_bar.h"
+#include "Hero.h"
 
 using namespace sf;
 
 class Enemy:public Entity{
 public:
-	Enemy();
-	Enemy(Vector2f position, String name, int hp, int arm, Animation animation_mass[]);
+	Enemy(Hero &her,Kamera &kam);
+	Enemy(Hero &her, Kamera &kam, Vector2f position, String name, int hp, int arm, Animation animation_mass[]);
 	~Enemy();
 	void collision(std::vector<lv::Object> &allObj);
-	void updateAndDraw(Time &time, std::vector<lv::Object> &allObj, RenderWindow &window);
+	virtual void updateAndDraw(Time &time, std::vector<lv::Object> &allObj, RenderWindow &window) = 0;
 	bool isAlive();
 	void setDamage(int damage);
 	int getDamage();
+	/*void setTarget(Hero &her);*/
 protected:
 	void swapAnimation();
 	int E_damage;
@@ -27,6 +29,8 @@ protected:
 	RectangleShape body;
 	int E_DX;
 	int E_DXL;
+	Hero& targetHero;
+	Kamera &kamera;
 };
 
 #endif

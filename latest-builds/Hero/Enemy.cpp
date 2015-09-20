@@ -1,26 +1,29 @@
 ﻿#include "Enemy.h"
 
-Enemy::Enemy() :Entity(){
-	E_DX = NULL;
-	E_DXL = NULL;
-	E_Speed = 1.0;
-	E_Life = true;
-	_onGround = false;
-	E_damage = 5;
+Enemy::Enemy(Hero &her, Kamera &kam) :Entity(), targetHero(her),kamera(kam){
+    E_DX = NULL;
+    E_DXL = NULL;
+    E_Speed = 1.0;
+    E_Life = true;
+    _onGround = false;
+    E_damage = 5;
+
+
 }
 
-Enemy::Enemy(Vector2f position, String name, int hp, int arm, Animation animation_mass[]) :Entity(name, animation_mass, position){
-	E_HP = hp;
-	E_ARM = arm;
-	E_Speed = 1.0;
-	E_Life = true;
-	_onGround = false;
-	E_damage = 15;
+Enemy::Enemy(Hero &her, Kamera &kam, Vector2f position, String name, int hp, int arm, Animation animation_mass[]) :Entity(name, animation_mass, position), targetHero(her),kamera(kam){
+    E_HP = hp;
+    E_ARM = arm;
+    E_Speed = 1.0;
+    E_Life = true;
+    _onGround = false;
+    E_damage = 15;
 }
 Enemy::~Enemy(){
 }
 
 void Enemy::setDamage(int damage){
+
 	E_damage = damage;
 }
 
@@ -32,7 +35,7 @@ void Enemy::collision(std::vector<lv::Object> &allObj){
 	for (int i = 0; i < allObj.size(); i++){
 
 		if (getGlobalBounds().intersects(allObj[i].rect)){
-			if (allObj[i].name == "ground")
+			if (allObj[i].name == "solid")
 			{
 				_onGround = true;
 				move(0, -0.5*time.asMilliseconds());// Отталкиваем от земли 
@@ -56,9 +59,10 @@ void Enemy::swapAnimation()
 
 	if (!_Animation.isPlaying())
 	{
-		playAnim(3); // Анимация по дефолту (если не выставить то при проверке на колизию будет краш, так как он будет запрашивать данные о кадре а тоесть его позици размер итд.)
+		playAnim(0); // Анимация по дефолту (если не выставить то при проверке на колизию будет краш, так как он будет запрашивать данные о кадре а тоесть его позици размер итд.)
 	}
-		if (E_DXL == 2 && E_DX == 0)  // Правая анимация стоя
+	/*
+	if (E_DXL == 2 && E_DX == 0)  // Правая анимация стоя
 	{
 		playAnim(0); // в зависимости от индеска масива анимаций
 		return;
@@ -88,6 +92,7 @@ void Enemy::swapAnimation()
 		playAnim(3);
 		return;
 	}
+	*/
 }
 
 void Enemy::updateAndDraw(Time &time, std::vector<lv::Object> &allObj, RenderWindow &window){

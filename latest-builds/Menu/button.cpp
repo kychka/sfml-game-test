@@ -1,4 +1,4 @@
-#include "button.h"
+﻿#include "button.h"
 
 Button::Button(String text, Vector2f position, unsigned int character_size)
 {

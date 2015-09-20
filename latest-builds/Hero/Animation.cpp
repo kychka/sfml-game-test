@@ -30,40 +30,36 @@ Animation::Animation() : m_texture(NULL)
 
 void Animation::loadFromXml(std::string fileName)
 {
+	pugi::xml_document animFile;
+	animFile.load_file(fileName.c_str());
 
-	TiXmlDocument animFile(fileName.c_str());
+	pugi::xml_node* head;
+	head = &animFile.child("sprites");
+	
+	pugi::xml_node* animElement;
+	animElement = &head->child("animation");
 
-	animFile.LoadFile();
-
-	TiXmlElement *head;
-	head = animFile.FirstChildElement("sprites");
-	TiXmlElement *animElement;
-	animElement = head->FirstChildElement("animation");
-
-	while (animElement)
+	while (*animElement)
 	{
-
-		int delay = atoi(animElement->Attribute("delay"));
-		TiXmlElement *cut;
-		cut = animElement->FirstChildElement("cut");
-		while (cut)
+		int delay = animElement->attribute("delay").as_int();
+		
+		pugi::xml_node* cut;
+		cut = &animElement->child("cut");
+		
+		while (*cut)
 		{
-			int x = atoi(cut->Attribute("x"));
-			int y = atoi(cut->Attribute("y"));
-			int w = atoi(cut->Attribute("w"));
-			int h = atoi(cut->Attribute("h"));
+			int x = cut->attribute("x").as_int();
+			int y = cut->attribute("y").as_int();
+			int w = cut->attribute("w").as_int();
+			int h = cut->attribute("h").as_int();
+			
 			m_frames.push_back(sf::IntRect(x, y, w, h));
-			cut = cut->NextSiblingElement("cut");
+			
+			cut = &cut->next_sibling("cut");
 		}
-
-		animElement = animElement->NextSiblingElement("animation");
+		animElement = &animElement->next_sibling("animation");
 	}
-
-
 }
-
-
-
 
 void Animation::addFrame(sf::IntRect rect)
 {

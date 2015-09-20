@@ -4,7 +4,7 @@ Hero::Hero()
 {
 	// Конструктор по умолчанию 
 	H_Name = "Hero";
-	H_Hp = 10;
+	H_Hp = 100;
 	H_Arm = 10;
 	H_X_Y_Poss.x = NULL;
 	H_X_Y_Poss.y = NULL;
@@ -24,7 +24,10 @@ Hero::Hero()
 	playerHitbox.setSize(Vector2f(189, 245)); /////////////// ТУТ можно подстроить размер хитбокса!!!!
 	playerHitbox.setPosition(0, 0);
 	playerHitbox.setFillColor(Color::Black); /// это для теста
+	//isAmmo = true;
 
+	immunityForDamage = false;
+	immunityTaimer = 0;
 
 
 	A_1.x = playerHitbox.getPosition().x;
@@ -73,7 +76,7 @@ void Hero::updateGravi(float frametime)
 	}
 
 }
-void Hero::setHeroHp(int hp)
+void Hero::setHeroHp(float hp)
 {
 	H_Hp = hp;
 }
@@ -264,7 +267,7 @@ void Hero::heroKeyPressed(bool K_ON)
 		isMove = false;
 	}
 }
-int Hero::getHeroHp()
+float Hero::getHeroHp()
 {
 	return H_Hp;
 }
@@ -276,7 +279,9 @@ void Hero::updateAndDrawHero(float frametime, Time &time, std::vector<lv::Object
 {
 	this->time = time;
 	H_Animation.updateAnimation(time);
+	immunity(frametime);
 	drawHero(window);
+	
 	heroControl(solidObj, groundObj, frametime);
 	collisionHeroWithX(solidObj, frametime);
 	collisionHeroWithY(solidObj, frametime);
@@ -288,6 +293,7 @@ void Hero::updateAndDrawHero(float frametime, Time &time, std::vector<lv::Object
 void Hero::heroControl(std::vector<lv::Object> &solidObj, std::vector<lv::Object> &groundObj, float frametime)
 {
 
+
 	heroKeyPressed(K_ON);//функция управления персонажем
 	HeroJump(frametime);
 
@@ -297,32 +303,39 @@ void Hero::heroControl(std::vector<lv::Object> &solidObj, std::vector<lv::Object
 	switch (state)//тут делаются различные действия в зависимости от состояния
 	{ //// тут надо разбираться с анимацией
 	case left: if (FireState != Fire){ moveHero(-H_Speed*frametime, 0); if (H_onGround == true) { H_Animation.play(H_MassAnim[3]); } }  break;//состояние идти влево
-	case right:if (FireState != Fire){ moveHero(H_Speed*frametime, 0); if (H_onGround == true) { H_Animation.play(H_MassAnim[2]); } }break; //состояние идти вправо      
+	case right:if (FireState != Fire){ moveHero(H_Speed*frametime, 0); if (H_onGround == true) { H_Animation.play(H_MassAnim[2]); } }   break; //состояние идти вправо      
 	};
 	if (isMove == false && FireState != Fire &&  StayState == StayRight){ H_Animation.play(H_MassAnim[2]); H_Animation.stop(0); } // Пока нету анимаций стоя 
 
 	if (isMove == false && FireState != Fire &&  StayState == StayLeft){ H_Animation.play(H_MassAnim[3]); H_Animation.stop(0); } // Пока нету анимаций стоя 
 
-	if (FireState == Fire && state == left){
+	//дополнительная провера на случай если стреляли и кончились патроны чтоб коректно анимация свичнулась а не застряла
+	if (isMove && !isAmmo &&  StayState == StayRight){ H_Animation.play(H_MassAnim[2]); H_Animation.stop(0); }
+	if (isMove && !isAmmo &&  StayState == StayLeft){ H_Animation.play(H_MassAnim[3]); H_Animation.stop(0); }
+
+	if (FireState == Fire && state == left && isAmmo){
 		moveHero(-H_Speed*frametime, 0); if (H_onGround == true)
 		{
 			H_Animation.setPosition(getHeroPossition().x - 81, getHeroPossition().y); H_Animation.play(H_MassAnim[5]);
 		}
 	}// бегим в лево и стреляем 
 
-	if (FireState == Fire && state == right){
+	if (FireState == Fire && state == right && isAmmo){
 		moveHero(H_Speed*frametime, 0); if (H_onGround == true)
 		{
 			H_Animation.play(H_MassAnim[4]);
 		}
 	} // бегим в право и стреляем 
 
-	if (FireState == Fire && isMove == false && StayState == StayLeft)
+	if (FireState == Fire && isMove == false && StayState == StayLeft && isAmmo)
 	{
 		H_Animation.setPosition(getHeroPossition().x - 81, getHeroPossition().y); H_Animation.play(H_MassAnim[6]);
 	};//стоим в лево и стреляем 
 
-	if (FireState == Fire && isMove == false && StayState == StayRight){ H_Animation.play(H_MassAnim[7]); };// стоим в право и стреляем 
+	if (FireState == Fire && isMove == false && StayState == StayRight && isAmmo)
+	{
+		H_Animation.play(H_MassAnim[7]);
+	};// стоим в право и стреляем 
 
 	if (JumpState == JumpStay  && H_onGround == false && StayState == StayLeft){ H_Animation.play(H_MassAnim[3]); }
 
@@ -335,6 +348,17 @@ void Hero::heroControl(std::vector<lv::Object> &solidObj, std::vector<lv::Object
 	if (!H_Jump){ JumpState = NoJump; }
 
 }
+/////////////////////////////////////////////
+int Hero::getFireState()
+{
+	return FireState;
+}
+int Hero::getStayState()
+{
+	return StayState;
+}
+/////////////////////////////////////////////
+
 /////////////////////
 void Hero::HeroJump(float frametime)
 {
@@ -359,6 +383,23 @@ void Hero::HeroJump(float frametime)
 Vector2f Hero::getHeroPossition()
 {
 	return H_X_Y_Poss;
+}
+int Hero::getheroAnimIndex()
+{
+	return H_Animation.getFrameIndex();
+}
+
+FloatRect Hero::getGlobalBounds(){
+	return playerHitbox.getGlobalBounds();
+}
+
+void Hero::isAmmo_chek(bool is)
+{
+	isAmmo = is;
+}
+
+int Hero::getDirectory(){
+	return state;
 }
 
 /////Гравитация///////
@@ -393,6 +434,7 @@ Kamera::Kamera(Hero &hero, lv::Level &level, RenderWindow &window)
 	MapRect.height = level.GetMapSize().y*level.GetTileSize().y; MapRect.width = level.GetMapSize().x*level.GetTileSize().x; // данные о размере карты 
 	L_W_H_Size.x = level.GetMapSize().x*level.GetTileSize().x;
 	L_W_H_Size.y = level.GetMapSize().y*level.GetTileSize().y;
+	view.setCenter(0 + view.getSize().x / 2, level.GetMapSize().y*level.GetTileSize().y - view.getSize().y / 2);
 }
 Kamera::Kamera()
 {
@@ -415,4 +457,33 @@ void Kamera::updateKamera() // Получает центр игрока, из н
 Vector2f Kamera::getPossition()
 {
 	return Vector2f(view.getCenter().x - view.getSize().x / 2, view.getCenter().y - view.getSize().y / 2);
+}
+
+void Hero::takeDamage(int dam){
+
+	if (!immunityForDamage){//если у игрока нет иммунитета к урону
+		H_Hp -= dam;//из жизней вычитается урон
+		H_Animation.setColor(Color::Red);//игрок окрашивается в красный
+		immunityForDamage = true;//включается иммунитет к урону
+		}
+	
+}
+
+void Hero::immunity(float time){
+	if (immunityForDamage){//если иммунитет включен
+		immunityTaimer += time;//то к таймеру прибавляется время
+	}
+	if (immunityTaimer >= 3000){//если на таймере 3000 милисекунд или больше
+		immunityTaimer = 0;//таймер обнуляется
+		immunityForDamage = false;//иммунитет к урону выключается
+		H_Animation.setColor(Color::White);//игрок возвращается к своему первичному цвету
+	}
+}
+Vector2f Kamera::getSize()
+{
+	return Vector2f(view.getSize().x, view.getSize().y);
+}
+FloatRect Kamera::getVisebleZone()
+{
+	return FloatRect(view.getCenter().x - view.getSize().x / 2, view.getCenter().y - view.getSize().y / 2, view.getSize().x, view.getSize().y);
 }

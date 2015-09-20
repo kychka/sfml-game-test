@@ -4,7 +4,7 @@
 #include<SFML/Graphics.hpp>
 #include "AnimatedSprite.hpp"
 #include "Animation.hpp"
-#include "../Level/Level.h"
+#include "../Level/Level.hpp"
 
 using namespace sf;
 
