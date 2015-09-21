@@ -5,7 +5,7 @@
 
 Пути получения сборки:
 - проект Visual studio 2013+ на облаке
-  - полная версия https://yadi.sk/d/WxJOukatiWnxK
+  - полная версия https://yadi.sk/d/wC1GfVxXjD75H
   - мини версия ( без библиотек и ресурсов) https://yadi.sk/d/K82hb-T0jD75F
 - исходники тут, на хабе (ветка test, папка latest-build), ресурсы на облаке
   - полная версия https://yadi.sk/d/w90l83H0jD76G
